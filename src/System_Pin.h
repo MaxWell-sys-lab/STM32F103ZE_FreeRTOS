@@ -1,8 +1,8 @@
 #ifndef _SYSTEM_PIN_H_
 #define _SYSTEM_PIN_H_
 
-#define LED_1_Pin   PB5
-#define LED_2_Pin   PE5
+// #define LED_1_Pin   PB5
+// #define LED_2_Pin   PE5
 
 #define KEY_2_Pin   PE2
 #define KEY_1_Pin   PE3

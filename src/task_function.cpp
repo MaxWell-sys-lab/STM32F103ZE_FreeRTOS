@@ -1,6 +1,21 @@
 #include "task_function.h"
 #include "project_config.h"
 
+void Task_LED_0_Control( void *pvParameters __attribute__((unused)) )
+{
+	pinMode(LED_0_Pin, OUTPUT);
+	bool LED_0_Statu = LOW;
+	while(1)
+	{
+		digitalWrite(LED_0_Pin, LED_0_Statu);
+		LED_0_Statu = !LED_0_Statu;
+		// Serial.print("LED_0_Control: ");
+		// Serial.println(LED_0_Statu);
+		vTaskDelay(500 * portTICK_PERIOD_MS);
+	}
+	
+}
+
 void Task_LED_1_Control( void *pvParameters __attribute__((unused)) )
 {
 	pinMode(LED_1_Pin, OUTPUT);
@@ -11,22 +26,7 @@ void Task_LED_1_Control( void *pvParameters __attribute__((unused)) )
 		LED_1_Statu = !LED_1_Statu;
 		// Serial.print("LED_1_Control: ");
 		// Serial.println(LED_1_Statu);
-		vTaskDelay(500);
-	}
-	
-}
-
-void Task_LED_2_Control( void *pvParameters __attribute__((unused)) )
-{
-	pinMode(LED_2_Pin, OUTPUT);
-	bool LED_2_Statu = LOW;
-	while(1)
-	{
-		digitalWrite(LED_2_Pin, LED_2_Statu);
-		LED_2_Statu = !LED_2_Statu;
-		// Serial.print("LED_2_Control: ");
-		// Serial.println(LED_2_Statu);
-		vTaskDelay(300);
+		vTaskDelay(300 * portTICK_PERIOD_MS);
 	}
 	
 }
@@ -39,8 +39,8 @@ void Task_Key_Scan( void *pvParameters __attribute__((unused)) )
 	pinMode(KEY_RIGHT_Pin, INPUT_PULLUP);
 
 	extern Key_Scan_Result_TypeDef Key_Scan_Result;
+	extern TaskHandle_t Task_LED_0_Control_TaskHandle;
 	extern TaskHandle_t Task_LED_1_Control_TaskHandle;
-	extern TaskHandle_t Task_LED_2_Control_TaskHandle;
 
 	while(1)
 	{
@@ -50,6 +50,16 @@ void Task_Key_Scan( void *pvParameters __attribute__((unused)) )
 		Key_Scan_Result.Key_Right_Pressed 	= digitalRead(KEY_RIGHT_Pin);
 		if(Key_Scan_Result.Key_UP_Pressed == true)
 		{
+			vTaskResume(Task_LED_0_Control_TaskHandle);
+			Serial.print("vTaskResume(Task_LED_0_Control_TaskHandle)");
+		}
+		else
+		{
+			vTaskSuspend(Task_LED_0_Control_TaskHandle);
+			Serial.print("vTaskSuspend(Task_LED_0_Control_TaskHandle)");
+		}
+		if(Key_Scan_Result.Key_Down_Pressed == true)
+		{
 			vTaskResume(Task_LED_1_Control_TaskHandle);
 			Serial.print("vTaskResume(Task_LED_1_Control_TaskHandle)");
 		}
@@ -57,16 +67,6 @@ void Task_Key_Scan( void *pvParameters __attribute__((unused)) )
 		{
 			vTaskSuspend(Task_LED_1_Control_TaskHandle);
 			Serial.print("vTaskSuspend(Task_LED_1_Control_TaskHandle)");
-		}
-		if(Key_Scan_Result.Key_Down_Pressed == true)
-		{
-			vTaskResume(Task_LED_2_Control_TaskHandle);
-			Serial.print("vTaskResume(Task_LED_2_Control_TaskHandle)");
-		}
-		else
-		{
-			vTaskSuspend(Task_LED_2_Control_TaskHandle);
-			Serial.print("vTaskSuspend(Task_LED_2_Control_TaskHandle)");
 		}
 		// Serial.println("=============================================");
 		// Serial.print("UP:");

@@ -13,8 +13,8 @@ typedef struct
     bool Key_Right_Pressed  = false;
 }Key_Scan_Result_TypeDef;
 
+void Task_LED_0_Control(void *pvParameters );
 void Task_LED_1_Control(void *pvParameters );
-void Task_LED_2_Control(void *pvParameters );
 void Task_Key_Scan(void *pvParameters );
 void Task_Print_Key_Result(void *pvParameters );
 
