@@ -50,23 +50,39 @@ void Task_Key_Scan( void *pvParameters __attribute__((unused)) )
 		Key_Scan_Result.Key_Right_Pressed 	= digitalRead(KEY_RIGHT_Pin);
 		if(Key_Scan_Result.Key_UP_Pressed == true)
 		{
-			vTaskResume(Task_LED_0_Control_TaskHandle);
-			Serial.print("vTaskResume(Task_LED_0_Control_TaskHandle)");
+			if(eTaskGetState(Task_LED_0_Control_TaskHandle) != eBlocked)
+			{
+				vTaskResume(Task_LED_0_Control_TaskHandle);
+				Serial.println("vTaskResume(Task_LED_0_Control_TaskHandle)");
+			}
+			// Serial.print("Task_LED_0_State:");
+			// Serial.println(eTaskGetState(Task_LED_0_Control_TaskHandle));
 		}
 		else
 		{
-			vTaskSuspend(Task_LED_0_Control_TaskHandle);
-			Serial.print("vTaskSuspend(Task_LED_0_Control_TaskHandle)");
+			if(eTaskGetState(Task_LED_0_Control_TaskHandle) != eSuspended)
+			{
+				vTaskSuspend(Task_LED_0_Control_TaskHandle);
+				Serial.println("vTaskSuspend(Task_LED_0_Control_TaskHandle)");
+			}
+			// Serial.print("Task_LED_0_State:");
+			// Serial.println(eTaskGetState(Task_LED_0_Control_TaskHandle));
 		}
 		if(Key_Scan_Result.Key_Down_Pressed == true)
 		{
-			vTaskResume(Task_LED_1_Control_TaskHandle);
-			Serial.print("vTaskResume(Task_LED_1_Control_TaskHandle)");
+			if(eTaskGetState(Task_LED_1_Control_TaskHandle) != eBlocked)
+			{
+				vTaskResume(Task_LED_1_Control_TaskHandle);
+				Serial.println("vTaskResume(Task_LED_1_Control_TaskHandle)");
+			}
 		}
 		else
 		{
-			vTaskSuspend(Task_LED_1_Control_TaskHandle);
-			Serial.print("vTaskSuspend(Task_LED_1_Control_TaskHandle)");
+			if(eTaskGetState(Task_LED_1_Control_TaskHandle) != eSuspended)
+			{
+				vTaskSuspend(Task_LED_1_Control_TaskHandle);
+				Serial.println("vTaskSuspend(Task_LED_1_Control_TaskHandle)");
+			}
 		}
 		// Serial.println("=============================================");
 		// Serial.print("UP:");
